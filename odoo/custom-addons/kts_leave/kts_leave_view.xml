@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+     <menuitem id="kts_menu_hr_holidays_configuration_leave" parent="hr_holidays.menu_hr_holidays_configuration"  
+            sequence="100"  action="hr_holidays.open_view_holiday_status"/>
+    	
+    	
+    	<record id="view_kts_hr_holiday_inherite_form" model="ir.ui.view">
+            <field name="name">hr.holidays.inherit</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//field[@name='date_from']" position="replace" />
+            	<xpath expr="//field[@name='date_to']" position="replace" />
+            	<xpath expr="//field[@name='number_of_days_temp']" position="replace" />
+            	<xpath expr="//field[@name='state']" position="replace" />
+            	<xpath expr="//field[@name='holiday_status_id']" position="replace" />
+            	<xpath expr="//field[@name='name']" position="after">
+            		<field name="request_type"  attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')], 'required':[('state','=','draft')]}" />
+            		<field name="holiday_status_id"  context="{'employee_id':employee_id}"/>
+                </xpath>
+            	<xpath expr="//button[@name='reset']" position="after">
+            		<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate,validate1" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
+            	</xpath>
+                <xpath expr="//field[@name='holiday_status_id']" position="after">
+                <label for="number_of_days_temp" string="Duration"/>
+                  <div>
+                 	<div attrs="{'invisible': [('type', '=', 'add')]}">
+                    	<field name="date_from"  attrs="{'required':[('type', '=', 'remove'),('request_type','=','leave_request')], 'invisible':[('request_type','!=','leave_request')]}" class="oe_inline"/>
+                       
+                        <field name="date_to"  attrs="{'required':[('type', '=', 'remove'),('request_type','=','leave_request')], 'invisible':[('request_type','!=','leave_request')]}" class="oe_inline"/>
+                    </div>
+                    <div> <field name="number_of_days_temp" class="oe_inline"/> days </div>
+                    
+                  </div>
+                </xpath>
+        	</field>
+        </record>
+        
+    	<record id="view_kts_hr_holiday_status_form" model="ir.ui.view">
+            <field name="name">hr.holidays.status.inherit</field>
+            <field name="model">hr.holidays.status</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='limit']" position="after">
+                    <field name="holiday_exclude"/>
+                    <field name="weekoff_exclude"/>
+                </xpath>
+                <xpath expr="//field[@name='active']" position="after">
+					<field name="leave_encashment"/>    
+                </xpath>
+            </field>
+        </record>
+        
+        
+        <record id="view_kts_holiday_creation_form" model="ir.ui.view">
+            <field name="name">kts.holidays.creation.form</field>
+            <field name="model">kts.holidays.creation</field>
+            <field name="arch" type="xml">
+	          	<form string="Create Holiday">
+    	        	<sheet>
+						<group>
+							<field name="name" />
+							<field name="holiday_date" />				
+						</group>
+					</sheet>
+				</form>
+            	</field>
+        </record>
+        
+        <record id="view_kts_holiday_creation_tree" model="ir.ui.view">
+            <field name="name">kts.holidays.creation.tree</field>
+            <field name="model">kts.holidays.creation</field>
+            <field name="arch" type="xml">
+	          	<tree string="Create Holiday">
+							<field name="name" />
+							<field name="holiday_date" />
+				</tree>				
+            	</field>
+        </record> 
+        <record id="action_kts_holiday_creation" model="ir.actions.act_window">
+       		<field name="name">Create Holiday</field>
+            <field name="res_model">kts.holidays.creation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>            
+       </record>
+       
+        
+       <menuitem id="kts_menu_hr_holidays_conf_holidays_exclude" parent="hr_holidays.menu_hr_holidays_configuration" 
+       sequence="101"  action="action_kts_holiday_creation" />
+      
+      <record id="action_kts_week_off_form" model="ir.actions.act_window">
+       		<field name="name">Create Week off</field>
+            <field name="res_model">kts.week.off</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>            
+       </record>
+       
+       
+      <record id="view_kts_week_off_form" model="ir.ui.view">
+            <field name="name">kts.week.off.form</field>
+            <field name="model">kts.week.off</field>
+            <field name="arch" type="xml">
+            	<form string="Week Off">
+                	<sheet>
+						<group>
+							<field name="name" />											
+						</group>
+					</sheet>
+				</form>	
+            </field>
+        </record>
+        
+       <menuitem id="kts_menu_hr_holidays_conf_weekoff_exclude" parent="hr_holidays.menu_hr_holidays_configuration"  
+            sequence="102"  action="action_kts_week_off_form" />
+    
+     <record id="action_kts_leave_period" model="ir.actions.act_window">
+       		<field name="name">Create Leave Period</field>
+            <field name="res_model">kts.leave.period</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>            
+     </record>
+     
+     <record id="view_kts_leave_period_form" model="ir.ui.view">
+            <field name="name">kts.leave.period.form</field>
+            <field name="model">kts.leave.period</field>
+            <field name="arch" type="xml">
+            	<form string="Leave Period Details">
+                	<sheet>
+					<group name="top" >
+						<group name="left" >
+							<field name="name" required="1" />
+							<field name="start_date" required="1" />
+							<field name="end_date" required="1" />
+																		
+						</group>
+						<group name="right" >
+							<field name="leave_quarter" />
+							<field name="leave_semi" />
+							<field name="leave_year" />
+							<field name="leave_generate" readonly="1" />
+						</group>
+					</group>
+					</sheet>
+				</form>	
+            </field>
+        </record>
+        
+     <record id="view_kts_leave_period_tree" model="ir.ui.view">
+            <field name="name">kts.leave.period.tree</field>
+            <field name="model">kts.leave.period</field>
+            <field name="arch" type="xml">
+            	<tree string="Leave Period Details">
+							<field name="name" required="1" />
+							<field name="start_date" required="1" />
+							<field name="end_date" required="1" />
+							<field name="leave_quarter" />
+							<field name="leave_semi" />
+							<field name="leave_year" />
+							<field name="leave_generate" readonly="1" />
+				</tree>	
+            </field>
+        </record>
+
+
+       <menuitem id="kts_menu_hr_holidays_leave_period" parent="hr_holidays.menu_hr_holidays_configuration"  
+            sequence="102"  action="action_kts_leave_period" />
+      
+     <record id="action_kts_allocation_rules" model="ir.actions.act_window">
+       		<field name="name">Create Allocation Rule</field>
+            <field name="res_model">kts.allocation.rules</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>            
+     </record>
+    
+     <record id="view_kts_allocation_rules_form" model="ir.ui.view">
+            <field name="name">kts.allocation.rules.form</field>
+            <field name="model">kts.allocation.rules</field>
+            <field name="arch" type="xml">
+            	<form string="Allocation Rules Details">
+                	<sheet>
+					<group name="top" >
+						<group name="left" >
+							<field name="designatione" required="1" />
+							<field name="hr_holiday_status" required="1" />
+						</group>
+						<group name="right" >
+							<field name="assignment_frequency" required="1" />
+							<field name="no_of_days" required="1" />
+						</group>
+					</group>
+					</sheet>
+				</form>	
+            </field>
+        </record>
+
+		<record id="view_kts_allocation_rules_tree" model="ir.ui.view">
+            <field name="name">kts.allocation.rules.tree</field>
+            <field name="model">kts.allocation.rules</field>
+            <field name="arch" type="xml">
+            	<tree string="Allocation Rules Details">
+							<field name="designatione" required="1" />
+							<field name="hr_holiday_status" required="1" />
+							<field name="assignment_frequency" required="1" />
+							<field name="no_of_days" required="1" />
+				</tree>	
+            </field>
+        </record>
+
+        
+       <menuitem id="kts_menu_hr_holidays_allocation_rule" parent="hr_holidays.menu_hr_holidays_configuration"  
+            sequence="102"  action="action_kts_allocation_rules" />
+
+	<record id="action_kts_generate_leave_allocation" model="ir.actions.act_window">
+       		<field name="name">Generate Leave Allocation</field>
+            <field name="res_model">kts.generate.leave.allocation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>            
+     </record>
+    
+     <record id="view_kts_generate_leave_allocation_form" model="ir.ui.view">
+            <field name="name">kts.generate.leave.allocation.form</field>
+            <field name="model">kts.generate.leave.allocation</field>
+            <field name="arch" type="xml">
+            	<form string="Generate Leave Allocation">
+                <header>
+                	<button name="generate_allocation" string="Generate" type="object" attrs="{'invisible':[('state','=','generated')]}"  class="btn-primary"/>
+                	<field name="state" widget="statusbar" statusbar_visible="draft,generated"  />
+                </header>
+                
+                	<sheet>
+					<group name="top" >
+						<group name="left" >
+							<field name="name" required="1" attrs="{'readonly':[('state','=','generated')]}" />
+						</group>
+						<group name="right" >
+							<field name="period_type" required="1" attrs="{'readonly':[('state','=','generated')]}" />
+						</group>
+					</group>
+					</sheet>
+				</form>	
+            </field>
+        </record>
+
+		<record id="view_kts_generate_leave_allocation_tree" model="ir.ui.view">
+            <field name="name">kts.generate.leave.allocation.tree</field>
+            <field name="model">kts.generate.leave.allocation</field>
+            <field name="arch" type="xml">
+            	<tree string="Generate Leave Allocation">
+							<field name="name" required="1" />
+							<field name="period_type" required="1" />
+							<field name="state"  />
+				</tree>	
+            </field>
+        </record>
+
+        
+       <menuitem id="kts_menu_hr_holidays_generate_leave" parent="hr_holidays.menu_hr_holidays_approvals"  
+            sequence="103"  action="action_kts_generate_leave_allocation" />
+
+
+    </data>
+</openerp>

@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_abtement_sale,access.kts.abatement.master.sale,model_kts_abatement_master,base.group_sale_salesman,1,1,1,1
+access_abtement_purchase,access.kts.abatement.master.purchase,model_kts_abatement_master,purchase.group_purchase_user,1,1,1,1
+access_abtement_account,access.kts.abatement.master.account,model_kts_abatement_master,account.group_account_user,1,1,1,1

@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_kts_contract_module,access.kts.contract,model_kts_contract,base.group_user,1,1,1,1
+access_kts_contract_module,access.kts.contract,model_kts_contract,base.group_sale_salesman,1,1,1,1
+access_kts_contract_product_line,access.kts.product.contract.line,model_kts_product_contract_line,base.group_user,1,1,1,1

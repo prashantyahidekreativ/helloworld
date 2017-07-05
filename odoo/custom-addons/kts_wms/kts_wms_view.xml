@@ -1,0 +1,367 @@
+<openerp>
+   <data>
+   <record id="kts_wms_bin_view_form" model="ir.ui.view">
+           <field name="name">kts.wms.bin.form.view</field>
+           <field name="model">kts.wms.bin</field>
+           <field name="arch" type="xml">
+              <form string="Bin"> 
+               <header>
+               <button name="action_activate" string="Activate" type="object" states="draft" class="btn-primary"/>
+               <button name="print_bin_code" string="Print Bin Code" type="object" states="active" class="btn-primary"/>
+              
+               <field name="state" widget="statusbar" statusbar_visible="draft,active"/>
+               </header>
+               <sheet>
+                 <group>
+                 <field name="name"/>
+                 <field name="active" attrs="{'readonly': [('state', 'in', ('draft',))]}"/>
+                 <field name="location_id" attrs="{'readonly': [('state', 'not in', ('draft',))]}" domain="[('bin','=',True)]"/>
+                 <field name="categ_id" attrs="{'readonly': [('state', 'not in', ('draft',))]}"/>
+                 <field name="capacity"/>
+                 <field name="qty_bin" readonly="1"/>
+                 <field name="uom_id" attrs="{'readonly': [('state', 'not in', ('draft',))]}"/>
+                 <field name="remaining_qty"/>
+                 <field name="bin_confirmation_code"/>
+                 <field name="note"/>
+                 </group>
+               
+               </sheet>            
+              </form>
+           </field>
+      </record> 
+      
+      <record id="kts_wms_bin_view_tree" model="ir.ui.view">
+            <field name="name">kts.wms.bin.view.tree</field>
+            <field name="model">kts.wms.bin</field>
+            <field name="arch" type="xml">
+                <tree string="Bins">
+                 <field name="name"/>
+                 <field name="location_id"/>
+                 <field name="categ_id"/>
+                 <field name="capacity"/>
+                <field name="bin_confirmation_code"/>
+                </tree>
+            </field>
+      </record>
+      
+      <record id="action_kts_wms_bin" model="ir.actions.act_window">
+            <field name="name">Master Bin</field>
+            <field name="res_model">kts.wms.bin</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="kts_wms_bin_view_tree"/>
+            <field name="view_mode">tree,form</field>
+            <field name="help"> Create Bin</field>
+        </record>
+
+        <menuitem action="action_kts_wms_bin" 
+        id="menu_kts_wms_bin" 
+        parent="stock.menu_stock_config_settings" 
+        name="Master Bin"
+        sequence="55" 
+          /> 
+      
+      
+      <record id="kts_view_stock_location_bin_form" model="ir.ui.view">
+            <field name="name">kts.stock.location.bin.form</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref= "stock.view_location_form"/>     
+                 <field name="arch" type="xml">
+                   <field name="active" position="before">
+                      <field name="bin" attrs="{'invisible':[('usage','!=','internal')]}"/>
+                   </field>
+                  
+                 </field>
+       </record> 
+       
+       <record id="kts_view_stock_quant_bin_form" model="ir.ui.view">
+            <field name="name">kts.stock.quant.bin.form</field>
+            <field name="model">stock.quant</field>
+            <field name="inherit_id" ref= "stock.view_stock_quant_form"/>     
+                 <field name="arch" type="xml">
+                   <field name="inventory_value" position="after">
+                      <field name="bin_id"/>
+                      <field name="bin_uom_qty"/>
+                   </field>
+                  
+                 </field>
+        </record> 
+         
+         <record id="kts_wms_bin_view_table_tree" model="ir.ui.view">
+            <field name="name">kts.wms.bin.view.table.tree</field>
+            <field name="model">kts.wms.bin</field>
+            <field name="arch" type="xml">
+                <tree string="Bins" create="false" edit="false" delete="false">
+                 <field name="name"/>
+                 <field name="location_id"/>
+                 <field name="categ_id"/>
+                 <field name="capacity"/>
+                 <field name="qty_bin"/>
+                 <field name="remaining_qty"/>
+                 <field name="uom_id"/>
+                </tree>
+            </field>
+          </record>
+     
+       <record id="kts_wms_bin_view_table_form" model="ir.ui.view">
+           <field name="name">kts.wms.bin.table.form.view</field>
+           <field name="model">kts.wms.bin</field>
+           <field name="arch" type="xml">
+              <form string="Bin" create="false" edit="false" delete="false"> 
+               <sheet>
+                 <group>
+                 <field name="name"/>
+                 <field name="location_id"/>
+                 <field name="categ_id"/>
+                 <field name="capacity"/>
+                 <field name="qty_bin"/>
+                 <field name="uom_id"/>
+                 <field name="remaining_qty"/>
+                 <field name="note"/>
+                 <field name="package_ids"/>
+                 </group>
+               
+               </sheet>            
+              </form>
+           </field>
+        </record> 
+     
+        <record id="kts_wms_bin_view_table_search" model="ir.ui.view">
+           <field name="name">kts.wms.bin.table.search.view</field>
+           <field name="model">kts.wms.bin</field>
+           <field name="arch" type="xml">
+            <search string="Search Bins">
+             <field name="name" string="Bin" filter_domain="['|','|', ('name','ilike',self),('location_id', 'child_of', self), ('categ_id', 'child_of', self)]"/>
+             <field name="name"/>
+             <field name="location_id"/>  
+           </search>
+           </field>
+        </record> 
+       
+       <record id="action_kts_wms_bin_table" model="ir.actions.act_window">
+            <field name="name">Inventory Bin</field>
+            <field name="res_model">kts.wms.bin</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field eval="False" name="view_id"/>
+            <field name="search_view_id" ref="kts_wms_bin_view_table_search"/>
+      
+        </record>
+
+        <record id="action_kts_wms_bin_table_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="kts_wms_bin_view_table_tree"/>
+            <field name="act_window_id" ref="action_kts_wms_bin_table"/>
+        </record>
+       
+        <record id="action_kts_wms_bin_table_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="kts_wms_bin_view_table_form"/>
+            <field name="act_window_id" ref="action_kts_wms_bin_table"/>
+       </record>
+       
+        
+        <menuitem action="action_kts_wms_bin_table" 
+        id="menu_kts_wms_bin_table" 
+        parent="stock.menu_warehouse_report" 
+        name="Inventory Bin"
+        sequence="155" 
+          /> 
+       
+       <record id="kts_view_product_category_bin_form" model="ir.ui.view">
+            <field name="name">kts.product.category.bin.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref= "product.product_category_form_view"/>     
+                 <field name="arch" type="xml">
+                   <xpath expr="//group[@name='first']"  position="after">
+                      <group name="bin" col="4" string="Bin Logistics">
+                      <field name="bin_push_strategy" widget="selection"/>
+                      </group>
+                   </xpath>
+                  
+                 </field>
+        </record> 
+       
+       <record id="kts_view_stock_inventory_bin_form" model="ir.ui.view">
+            <field name="name">kts.stock.inventory.bin.form</field>
+            <field name="model">stock.inventory</field>
+            <field name="inherit_id" ref= "stock.view_inventory_form"/>     
+                 <field name="arch" type="xml">
+                   <xpath expr="//field[@name='line_ids']/tree/field[@name='location_id']"  position="after"> 
+                      <field name="bin_id" />
+                   </xpath>
+                  
+                 </field>
+        </record> 
+        <record id="kts_view_pack_operation_details_form_extension" model="ir.ui.view">
+            <field name="name">stock.pack.operation.details.form1</field>
+            <field name="model">stock.pack.operation</field>
+            <field name="inherit_id" ref="stock.view_pack_operation_details_form"/>     
+                 <field name="arch" type="xml">
+                      <field name="product_uom_id" position="attributes">
+                          <attribute name="attrs">{'readonly':True}</attribute>
+                      </field>
+                 </field>     
+        </record>         
+        
+        <record id="kts_wms_bin_view_stock_picking_type_form" model="ir.ui.view">
+            <field name="name">kts.wms.bin.stock.picking.type.form</field>
+            <field name="model">stock.picking.type</field>
+            <field name="inherit_id" ref="stock.view_picking_type_form"/>     
+                 <field name="arch" type="xml">
+                 <field name="barcode_nomenclature_id" position="after">
+                     <field name="putaway_printing"/>
+            
+                     </field>
+            
+                 </field>
+        </record>
+        <record id="kts_wms_bin_view_serial_lot_form_extension" model="ir.ui.view">
+            <field name="name">kts.wms.stock.pack.operation.lots.form</field>
+            <field name="model">stock.pack.operation</field>
+            <field name="inherit_id" ref="stock.view_pack_operation_lot_form"/>     
+                 <field name="arch" type="xml">
+                    <field name="product_id" position="after">
+                        
+                            <field name="expiry_date" invisible="not context.get('only_create', False)"  />
+                        
+                    </field> 
+                     <field name="qty_done" position="after">
+                         <button name="autogen_expiry_date" type="object" string="Generate Expiry date" class="oe_right oe_highlight" invisible="not context.get('only_create', False)"/>
+                     </field>
+                     <xpath expr="//field[@name='pack_lot_ids']"  position="attributes">
+                         <attribute name="attrs">{'readonly':False}</attribute>
+                     </xpath>
+                     
+                    
+                     <xpath expr="//field[@name='pack_lot_ids']/tree/field[@name='lot_name']" position="after">
+                         <field name="vendor_serial_no" invisible="not context.get('only_create', False)" readonly="0"/>
+                         <field name="expiry_date" invisible="not context.get('only_create', False)" readonly="0"/>
+                     </xpath>  
+                 
+                    
+                     <xpath expr="//field[@name='pack_lot_ids']/tree/field[@name='lot_name']" position="attributes">
+                         <attribute name="attrs"> {'readonly':True}</attribute>
+                     </xpath>  
+                     
+                     <xpath expr="//field[@name='pack_lot_ids']/tree/field[@name='lot_id']" position="attributes">
+                         <attribute name="attrs"> {'readonly':True}</attribute>
+                     </xpath>  
+                   
+                    
+                 </field>
+        </record>  
+       
+       <record id="kts_inventory_report_bin_form" model="ir.ui.view">
+      <field name="name">kts.inventory.report.bin.form</field>
+      <field name="model">kts.inventory.reports</field>
+      <field name="inherit_id" ref="ktssarg_reports.kts_inventory_report_form"/>     
+                
+          <field name="arch" type="xml">
+            
+            <field name="date_start" position="attributes">
+               <attribute name="attrs">{'required':[('report_type','not in',('stock_bin','stock_physical_verification','putaway_receipt','product_warranty_report','picking_list','product_pricelist_weigthed_cost','packing_list','reorder_report','material_reservation_status','stock_list'))],'invisible':[('report_type','in',('stock_bin','stock_physical_verification','putaway_receipt','product_warranty_report','picking_list','product_pricelist_weigthed_cost','packing_list','reorder_report','material_reservation_status','stock_list'))]}</attribute>
+            
+            </field>
+            <field name="date_stop" position="attributes">
+               <attribute name="attrs">{'required':[('report_type','not in',('stock_bin','stock_physical_verification','putaway_receipt','product_warranty_report','picking_list','product_pricelist_weigthed_cost','packing_list','procurement_order_summary','reorder_report','material_reservation_status','stock_list'))],'invisible':[('report_type','in',('stock_bin','stock_physical_verification','putaway_receipt','product_warranty_report','picking_list','product_pricelist_weigthed_cost','packing_list','procurement_order_summary','reorder_report','material_reservation_status','stock_list'))]}</attribute>
+            </field>
+            <field name="date_stop" position="after">
+               <field name="bin_id" attrs="{'invisible':[('report_type','not in',('putaway_receipt'))]}" />
+            </field>
+            
+          </field>
+      </record>  
+      <record id="kts_sales_report_bin_form" model="ir.ui.view">
+      <field name="name">kts.sale.report.bin.form</field>
+      <field name="model">kts.sale.reports</field>
+      <field name="inherit_id" ref="ktssarg_reports.kts_sales_report_form"/>     
+      
+      <field name="arch" type="xml">
+           
+          <field name="date_start" position="attributes">
+               <attribute name="attrs">{'required':True}</attribute>
+            
+            </field>
+            <field name="date_stop" position="attributes">
+               <attribute name="attrs">{'required':True}</attribute>
+            </field>
+            
+      </field>
+      </record>    
+      <record id="kts_purchase_report_bin_form" model="ir.ui.view">
+      <field name="name">kts.purchase.report.bin.form</field>
+      <field name="model">kts.purchase.reports</field>
+      <field name="inherit_id" ref="ktssarg_reports.kts_purchase_report_form"/>     
+      
+      <field name="arch" type="xml">
+           <field name="date_start" position="attributes">
+               <attribute name="attrs">{'required':[('report_type','not in',('vendor_lead_time','product_lead_time'))],'invisible':[('report_type','in',('vendor_lead_time','product_lead_time'))]}</attribute>
+            </field>
+            <field name="date_stop" position="attributes">
+               <attribute name="attrs">{'required':[('report_type','not in',('vendor_lead_time','product_lead_time'))],'invisible':[('report_type','in',('vendor_lead_time','product_lead_time'))]}</attribute>
+            </field>
+            <field name="partner_id" position="attributes">
+              <attribute name="attrs">{'invisible':[('report_type','in',('vendor_lead_time','purchase_price_variance','product_lead_time'))]}</attribute>
+            </field>          
+          </field>
+       </record>    
+      
+      <record id="kts_view_stock_picking_shipping_label_form" model="ir.ui.view">
+            <field name="name">stock.picking.shipping.label.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>     
+                 <field name="arch" type="xml">
+                      
+                      <xpath expr="//button[@name='action_cancel']" position="after">
+                      <button name="to_print_shipping_lable" type="object" string="Print Shipping Label" attrs="{'invisible':[('picking_type_code','!=','outgoing')]}"/>                
+                      </xpath>
+                      <xpath expr="//page[@name='extra']" position="after">
+                       <page string="Bin Code" name="bin_code">
+                       <group string="Bin Confirmation Code">
+                           <field name="putaway_printing" invisible="1"/>
+                           <field name="bin_code_ids"  attrs="{'invisible':['|',('putaway_printing','!=',True),('state','not in',['partially_available','assigned'])]}">
+                           <tree string="Bin Code" editable="bottom">
+                           <field name="name"/>
+                           </tree>
+                           </field>                          
+                       </group>
+                       
+                       </page>
+                      
+                      </xpath>
+                       
+                 </field>
+      </record>   
+      
+      <record id="kts_bin_account_report_form" model="ir.ui.view">
+      <field name="name">kts.bin.account.report.form</field>
+      <field name="model">kts.account.report</field>
+      <field name="inherit_id" ref="ktssarg_reports.kts_account_report_form"/>     
+          
+          <field name="arch" type="xml">
+           <field name="date_start" position="attributes">
+               <attribute name="attrs">{'required':[('report_type','not in',('customer_ageing_report','vendor_ageing_report'))],'invisible':[('report_type','in',('customer_ageing_report','vendor_ageing_report'))]}</attribute>
+            </field>
+           
+           <field name="date_stop" position="attributes">
+               <attribute name="attrs">{'required':[('report_type','not in',('creditors_trial_balance','debtors_trial_balance','pl_and_balance_sheet_compare','customer_ageing_report','vendor_ageing_report'))],'invisible':[('report_type','in',('creditors_trial_balance','debtors_trial_balance','pl_and_balance_sheet_compare','customer_ageing_report','vendor_ageing_report'))]}</attribute>
+           </field>
+                      
+          </field>
+      </record>
+      <record id="kts_stock_production_lot_form" model="ir.ui.view">
+		      <field name="name">kts.stock.production.lot.form</field>
+		      <field name="model">stock.production.lot</field>
+		      <field name="inherit_id" ref="stock.view_production_lot_form"/>     
+		      <field name="arch" type="xml">
+		       <field name="ref" position="after">
+		         <field name="vendor_serial_no"/>
+		       </field>      
+		      </field>
+	  </record>
+      
+     
+   </data>
+</openerp>

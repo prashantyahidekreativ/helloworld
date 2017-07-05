@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_kts_serial_tracking_stock,access_kts_serial_tracking_stock,model_kts_serial_tracking,stock.group_stock_user,1,1,1,1
+access_kts_serial_tracking_line_stock,access_kts_serial_tracking_line_stock,model_kts_serial_tracking_line,stock.group_stock_user,1,1,1,1
+access_kts_serial_tracking_line_mrp,access_kts_serial_tracking_line_mrp,model_kts_serial_tracking_line,mrp.group_mrp_user,1,1,1,1
+access_kts_serial_tracking_mrp,access_kts_serial_tracking_mrp,model_kts_serial_tracking,mrp.group_mrp_user,1,1,1,1

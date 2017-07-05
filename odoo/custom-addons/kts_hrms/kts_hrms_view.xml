@@ -1,0 +1,113 @@
+<openerp>
+  <data>
+    <record id="kts_attendance_sheet_form" model="ir.ui.view">
+            <field name="name">hr.attendance_sheet.form</field>
+            <field name="model">hr.attendance_sheet</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="HR Attendance Sheet">
+                    <group>
+                    <field name="employee_id" />
+                    <field name="name" />
+                    <field name="sign_in" />
+                    <field name="sign_out" />
+                    <field name="shift" />
+                    <field name="total" />
+                    <field name="late" />
+                    <field name="short" />
+                    <field name="ot" />
+                    <field name="auth_ot" />
+                    <field name="action_desc" />
+                    </group>
+                    <newline/>
+                    <group colspan="4" col="4">
+                        <group colspan="2" col="2">
+                            <field name="state" widget="statusbar" statusbar_visible="waiting,rejected,approved" statusbar_colors='{"waiting":"blue","rejected":"red", "approved":"green"}'/>       
+                        </group>
+                        <group colspan="2" col="2">
+                            <group colspan="8" col="8">
+                                <button icon="gtk-apply" name="action_edit" string="Edit" states="rejected,approved" type="object" groups="ktssarg_hrms.kts_attendance_sheet_admin"/> 
+                                <button icon="gtk-apply" name="action_approve" string="Approve" states="waiting" type="object" groups="ktssarg_hrms.kts_attendance_sheet_admin"/> 
+                                <button icon="gtk-apply" name="action_reject" string="Reject" states="waiting" type="object" groups="ktssarg_hrms.kts_attendance_sheet_admin"/> 
+                            </group>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="kts_attendance_sheet_tree" model="ir.ui.view">
+            <field name="name">hr.attendance_sheet.tree</field>
+            <field name="model">hr.attendance_sheet</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="HR Attendance Sheet" colors="blue:state=='waiting';red:state=='rejected';green:state=='approved'">                    
+                    <field name="employee_id" />
+                    <field name="name" />
+                    <field name="sign_in" />
+                    <field name="sign_out" />
+                    <field name="shift" />
+                    <field name="total" />
+                    <field name="late" />
+                    <field name="short" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="kts_attendance_sheet_action" model="ir.actions.act_window">
+            <field name="name">HR Attendance Sheet</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.attendance_sheet</field>
+            <field name="view_type">form</field>
+        </record> 
+        
+        <menuitem id="kts_attendance_sheet" name="Attendance Sheet" parent="hr_attendance.menu_hr_attendance_root" action="kts_attendance_sheet_action" sequence="25" />           
+         
+         <record id="kts_hr_attendance_loader_form" model="ir.ui.view">
+            <field name="name">hr.attendance_loader.form</field>
+            <field name="model">hr.attendance_loader</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Upload Attendance">
+                    <field name="name" invisible="1" string="Attendance File Path" />
+                    <group colspan="4" col="4">
+                        <group col="2" colspan="2">
+                            <field name="datas" filename="datas_fname"/>
+                            <field name="datas_fname" select="1"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <group col="4" colspan="4">
+                                <button icon="gtk-apply" name="button_attendance_upload" string="Upload Attendance" type="object" colspan="2" attrs="{'readonly': [('message','!=',False)]}"/>
+                                <label string="" colspan="2"/>
+                            </group>
+                        </group>
+                    </group>
+                    <field name="message" nolabel="1" attrs="{'invisible':[('message','=',False)]}"  />
+                </form>
+            </field>
+        </record>
+
+        <record id="kts_hr_attendance_loader_tree" model="ir.ui.view">
+            <field name="name">hr.attendance_loader.tree</field>
+            <field name="model">hr.attendance_loader</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Upload Attendance" >                    
+                    <field name="datas_fname" />
+                    <field name="datas" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_attendance_loader" model="ir.actions.act_window">
+            <field name="name">Upload Attendance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.attendance_loader</field>
+            <field name="view_type">form</field>
+        </record>
+
+        <menuitem action="action_attendance_loader" id="menu_hr_attendance_loader" parent="hr_attendance.menu_hr_attendance_root" sequence="40"/>
+        
+  </data>
+</openerp>

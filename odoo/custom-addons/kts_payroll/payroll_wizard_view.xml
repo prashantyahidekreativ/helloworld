@@ -1,0 +1,31 @@
+<openerp>
+  <data>
+  
+      <record id="view_employee_salary_payment_wizard" model="ir.ui.view">
+            <field name="name">kts.employee.salary.payment.form</field>
+            <field name="model">kts.payroll.wizard</field>            
+            <field name="arch" type="xml">
+                <form string="Employee salary Journals">
+                	<sheet>
+                      <group>
+                        <field name="journal_id" string="Salary Journal"/>
+                        <field name="journal_amt_id" string="Bank Journal"/>
+                      </group>
+                    </sheet>
+                    <footer>
+                        <button name="register_employee_payment" string="Post Salary" type="object" class="btn-primary"/> 
+                        <button special="cancel" name="Cancel" string="Cancel"/>
+                    </footer>
+                 </form>
+            </field>
+        </record>
+       
+  
+      <act_window id="action_bulk_employee_payment"
+            multi="True"
+            key2="client_action_multi" name="Employee Payment"
+            res_model="kts.payroll.wizard" src_model="kts.employee.salary"
+            view_mode="form" target="new" view_type="form" />
+     
+      </data>
+</openerp>

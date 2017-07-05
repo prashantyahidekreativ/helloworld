@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_order_tax,access.sale.order.tax.sale_manager,model_sale_order_tax,base.group_sale_salesman,1,1,1,1
+access_purchase_order_tax,access.purchase_order_tax,model_purchase_order_tax,purchase.group_purchase_user,1,1,1,1
+access_kts_account_level,access_kts_account_level,model_kts_account_level,account.group_account_manager,1,1,1,1
+access_account_ktstds,access_account_ktstds,model_account_ktstds,account.group_account_invoice,1,1,1,1
+access_kts_control_account,access_kts_control_account,model_kts_control_account,account.group_account_manager,1,1,1,1

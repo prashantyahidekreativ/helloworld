@@ -1,0 +1,209 @@
+<openerp>
+  <data>
+     <record id="kts_view_serial_lot_form_extension" model="ir.ui.view">
+            <field name="name">stock.pack.operation.lots.form1</field>
+            <field name="model">stock.pack.operation</field>
+            <field name="inherit_id" ref="stock.view_pack_operation_lot_form"/>     
+                 <field name="arch" type="xml"> 
+                    <field name="product_id" position="after">
+                      <field name="autoserial_lot_gen" invisible="1"/>
+                      <field name="qty_received" attrs="{'invisible':[('autoserial_lot_gen','=',False)]}"/> 
+                      <field name="expiry_date" invisible="not context.get('only_create', False)"  />
+                    </field>
+                   <field name="qty_done" position="after">
+                      <button name="autogen_serialno" type="object" string="Generate serial" class="oe_right oe_highlight" attrs="{'invisible':[('autoserial_lot_gen','=',False)]}" invisible="not context.get('serial') or not context.get('only_create', False)"/>
+                      <button name="autogen_lotno" type="object" string="Generate Lot " class="oe_right oe_highlight" attrs="{'invisible':[('autoserial_lot_gen','=',False)]}" invisible="context.get('serial') or not context.get('only_create', False)"/>
+                      <button name="do_partial_plus" type="object" string="Partial Do Plus" class="oe_right oe_highlight" attrs="{'invisible':[('autoserial_lot_gen','=',False)]}" invisible="not context.get('serial') or context.get('only_create', False)"/>
+                      <button name="autogen_expiry_date" type="object" string="Generate Expiry date" class="oe_right oe_highlight" invisible="not context.get('only_create', False)"/>
+                   </field>
+                   <field name="qty_done" position="after">
+                     <button name="do_all_plus" type="object" string="All Done" class="oe_right oe_highlight" attrs="{'invisible':[('autoserial_lot_gen','=',False)]}" invisible="not context.get('serial') or context.get('only_create', False)"/>
+                   
+                   </field>
+                   <xpath expr="//field[@name='pack_lot_ids']/tree/field[@name='lot_name']" position="after">
+                         <field name="vendor_serial_no" invisible="not context.get('only_create', False)" readonly="0"/>
+                         <field name="expiry_date" invisible="not context.get('only_create', False)" readonly="0"/>
+                   </xpath>  
+                 
+                   <!--    
+                   <field name="pack_lot_ids" position="attributes">
+                   <attribute name="attrs">{'readonly':['|',('autoserial_lot_gen','=',True),('state', '=', 'done')]}</attribute>
+                   </field>
+                     -->
+            </field>
+    </record>     
+    <record id="kts_stock_production_lot_form" model="ir.ui.view">
+              <field name="name">kts.stock.production.lot.form</field>
+              <field name="model">stock.production.lot</field>
+              <field name="inherit_id" ref="stock.view_production_lot_form"/>     
+              <field name="arch" type="xml">
+               <field name="ref" position="after">
+                 <field name="vendor_serial_no"/>
+               </field>      
+              </field>
+      </record> 
+    <record id="kts_view_mrp_production_wizard" model="ir.ui.view">
+            <field name="name">mrp.product.produce.wizard</field>
+            <field name="model">mrp.product.produce</field>
+            <field name="inherit_id" ref="mrp.view_mrp_product_produce_wizard"/>     
+                 <field name="arch" type="xml">
+                   
+                    <field name="lot_id" position="attributes">
+                      <attribute name="attrs">{'required':False,'invisible':[('tracking','!=','lot')]}</attribute>
+                     </field>
+                   
+                    <xpath expr="//field[@name='lot_id']" position="after">
+                      <button name="autogen_serialno" type="object" string="Generate serial" class="oe_highlight" invisible="1"/>
+                     
+                      <field name="final_ids" nolabel="1"  invisible="1"> 
+                         <tree editable="bottom">
+                            <field name="lot_id1"/>
+                            <field name="product_id"/>
+                         </tree>
+                      </field> 
+                      
+                      </xpath>
+            </field>
+      </record>     
+   
+      <record id="view_kts_serial_tracking_tree" model="ir.ui.view">
+            <field name="name">kts.serial.tracking.tree</field>
+            <field name="model">kts.serial.tracking</field>   
+            <field name="arch" type="xml">
+                <tree string="Serial Track">
+                <field name="production_id"/>
+                <field name="finished_pro_id"/>
+                <field name="fin_pro_uom_id"/>
+                <field name="fin_product_lot_id"/>
+                <field name="product_consume_line"/>    
+                </tree>
+            </field>
+       </record>
+      
+       <record id="view_kts_serial_tracking_form" model="ir.ui.view">
+            <field name="name">kts.serial.tracking.form</field>
+            <field name="model">kts.serial.tracking</field>   
+            <field name="arch" type="xml">
+                <form string="Serial Track">
+                  <sheet>
+                      <group>
+                          <field name="production_id"/>
+                          <field name="finished_pro_id"/>
+                          <field name="fin_pro_uom_id"/>
+                          <field name="fin_product_lot_id"/>
+                      </group>
+                      <field name="product_consume_line">    
+                       <tree editable="bottom">
+                          <field name="product_id"/>
+                          <field name="product_uom_id"/>
+                          <field name="product_lot_id"/>
+                       </tree>
+   
+                     </field>
+                  </sheet>
+                </form>
+            </field>
+       </record>
+       
+       <record id="action_kts_serial_tracking" model="ir.actions.act_window">
+            <field name="name">Serial Track</field>
+            <field name="res_model">kts.serial.tracking</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>            
+       </record>
+       <menuitem
+            id="menu_action_kts_serial_tracking"
+            action="action_kts_serial_tracking"
+            parent="mrp.menu_mrp_manufacturing"    
+            sequence="3"/>     
+  
+       <record id="kts_view_mrp_production_form_inherit" model="ir.ui.view">
+            <field name="name">mrp.production.form.inherit</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>     
+                 <field name="arch" type="xml">
+                     <field name="product_id" position="after">
+                       <field name="product_consumed_flag" invisible="1"/>
+                     </field> 
+                     <field name="product_uom" position="attributes">
+                        <attribute name="readonly">1</attribute>
+                     </field>
+                     <xpath expr="//button[@name='force_production']" position="replace"/>
+                        <field name="origin" position="after">
+                        <field name="plan_qty" readonly="1"/>
+                        <field name="confirmed_qty" readonly="1"/>
+                        <field name="jobcard_qty" readonly="1"/>
+                        <field name="mrp_progress"/>
+                     </field>     
+                     <button name="%(mrp.move_consume)d" position="before"> 
+                        <field name="string_availability_info"/>
+                        <field name="partial_job_card_qty"/>
+                     </button>
+                     <xpath expr="//notebook" position="inside">
+                         <page string="Attachment">
+                            <field name="attachment_lines" mode="tree">
+                             <tree>
+                               <field name="name"/>
+                               <field name="datas"/>
+                             </tree>
+                            </field>
+                         </page>
+                     
+                     </xpath>
+                 </field>
+       </record>
+       
+       <record id="kts_view_stock_location_default_production_loc_form" model="ir.ui.view">
+            <field name="name">kts.stock.location.default.pro.loc.form</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref= "stock.view_location_form"/>     
+                 <field name="arch" type="xml">
+                   <field name="active" position="before">
+                      <field name="default_prod_loc" attrs="{'invisible':[('usage','!=','internal')]}"/>
+                   </field>
+                  
+                 </field>
+        </record> 
+        
+        <record id="kts_view_mrp_bom_form" model="ir.ui.view">
+            <field name="name">mrp.bom.form.inherit</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>     
+                 <field name="arch" type="xml">
+                 <field name="product_uom" position="attributes">
+                 <attribute name="readonly">1</attribute>
+                 </field>
+                 <xpath expr="//tree/field[@name='product_uom']" position="attributes">
+                 <attribute name="readonly">1</attribute>
+                 </xpath>
+            </field>
+        </record>
+        
+        <record id="kts_view_stock_move_form" model="ir.ui.view">
+            <field name="name">stock.move.form.inherit</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>     
+                 <field name="arch" type="xml">
+                 <field name="state" position="before">
+                 <button name="do_unreserve_mrp_consumelines" type="object" string="Unreserve" states="confirmed,assigned" class="oe_highlight" domain="[('raw_material_production_id','=',True)]" />
+                 <button name="action_assign_mrp_consumelines" type="object" string="Reserve" states="confirmed,waiting" class="oe_highlight" domain="[('raw_material_production_id','=',True)]" />
+                 </field>
+            </field>
+        </record>
+        
+        <record id="kts_view_stock_picking_type_form" model="ir.ui.view">
+            <field name="name">kts.stock.picking.type.form</field>
+            <field name="model">stock.picking.type</field>
+            <field name="inherit_id" ref="stock.view_picking_type_form"/>     
+                 <field name="arch" type="xml">
+                 <field name="barcode_nomenclature_id" position="after">
+                 <field name="production_picking"/>
+                 
+                 </field>
+                 
+                 </field>
+            </record>
+        
+  </data>
+</openerp>
+

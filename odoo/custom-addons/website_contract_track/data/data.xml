@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="menu_contract" model="website.menu">
+            <field name="name">Customer Contract Tracker</field>
+            <field name="url">/Contract</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">80</field>
+        </record>
+        <record id="menu_service" model="website.menu">
+            <field name="name">Service Tracker</field>
+            <field name="url">/service</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">85</field>
+        </record>
+    </data>
+</openerp>

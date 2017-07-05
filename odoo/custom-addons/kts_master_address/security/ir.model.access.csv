@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_city_master_sale,access_city_master_sale,model_kts_city_master,base.group_sale_manager,1,1,1,1
+access_city_master_purchase,access_city_master_purchase,model_kts_city_master,purchase.group_purchase_manager,1,1,1,1
+access_area_master_sale,access_area_master_sale,model_kts_area_master,base.group_sale_manager,1,1,1,1
+access_area_master_purchase,access_area_master_purchase,model_kts_area_master,purchase.group_purchase_manager,1,1,1,1

@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_kts_quotation_rejection,access_kts_quotation_rejection,model_kts_quotation_rejection,base.group_sale_salesman,1,1,1,1

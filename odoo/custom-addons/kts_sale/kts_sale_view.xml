@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="kts_view_order_form" model="ir.ui.view">
+            <field name="name">kts.sale.order.form</field>
+            <field name="model">sale.order</field>
+	        <field name="inherit_id" ref="sale.view_order_form"/>	
+          <field name="arch" type="xml">
+		    <field name="payment_term_id" position="after">
+			     
+			   <field name="cancel_state" invisible="1"></field>
+			   <field name="rejection_reason" ></field>
+			   <field name="origin_id" attrs="{'invisible': [('origin_id','=',False)]}"  ></field>
+			 
+		    </field>	            
+	      </field>
+	      
+        </record>
+        
+        <record id="kts_view_list_crm" model="ir.ui.view">
+            <field name="name">kts.crm.list.form</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_leads"/>   
+          <field name="arch" type="xml">
+          
+	          <field name="country_id" position="attributes">
+	            <attribute name="invisible">1</attribute>
+	          </field>                
+	          <field name="phone" position="attributes">
+                <attribute name="invisible">1</attribute>
+              </field>                
+              <field name="contact_name" position="after">
+                 <field name="partner_name"/>
+                 <field name="city"/>
+                 <field name="mobile"/>
+              </field> 
+          </field>
+          
+        </record>
+         
+        
+    </data>
+</openerp>

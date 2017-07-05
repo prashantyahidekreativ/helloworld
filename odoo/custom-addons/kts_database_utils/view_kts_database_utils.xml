@@ -1,0 +1,181 @@
+<openerp>
+   <data>
+      <record id="view_kts_database_utils_tree" model="ir.ui.view">
+            <field name="name">kts.database.utils.tree</field>
+            <field name="model">kts.database.utils</field>   
+            <field name="arch" type="xml">
+                <tree string="Database Backup">
+                    <field name="name"/>
+                    <field name="bkp_dir"/>
+                    <field name="backup_type"/>
+                    <field name="backup_date"/>
+                </tree>
+                </field>
+      </record> 
+      
+      <record id="view_kts_database_utils_form" model="ir.ui.view">
+            <field name="name">kts.database.utils.form</field>
+            <field name="model">kts.database.utils</field>   
+            <field name="arch" type="xml">
+                <form string="Database Backup">
+                 <sheet>   
+                    <group>
+                       <field name="backup_flag" invisible="1"/>
+                       <field name="name" readonly="1"/>
+                       <field name="bkp_dir" required="1"/>
+                       <field name="backup_type" />
+                       <field name="backup_date"/>
+                       <button name="schedule_backup" string="Database Backup" type="object" class="btn-primary" />
+                     </group>
+                    <group>
+                    <field name="note"/>
+                    </group>
+                    
+                </sheet>
+                </form>
+             </field>
+      </record> 
+      <record id="view_kts_database_utils_tree1" model="ir.ui.view">
+            <field name="name">kts.database.utils.tree1</field>
+            <field name="model">kts.database.utils</field>   
+            <field name="arch" type="xml">
+                <tree string="Database Restore">
+                    <field name="name"/>
+                    <field name="bkp_dir"/>
+                    <field name="backup_type"/>
+                    <field name="backup_date"/>
+                </tree>
+                </field>
+      </record> 
+      
+      <record id="view_kts_database_utils_form1" model="ir.ui.view">
+            <field name="name">kts.database.utils.form1</field>
+            <field name="model">kts.database.utils</field>   
+            <field name="arch" type="xml">
+                <form string="Database Restore">
+                 <sheet>   
+                    <group>
+                       
+                       <field name="restore_flag" invisible="1"/>
+                       <field name="new_name" />
+                       <field name="backup_date"/>
+                       <field name="bkp_dir" required="1"/>
+                       <button name="schedule_restore" string="Database Restore" type="object" class="btn-primary" />
+                    </group>
+                    <group>
+                    <field name="note"/>
+                    </group>
+                    
+                </sheet>
+                </form>
+             </field>
+      </record> 
+      
+       <record id="view_kts_database_backup_filter" model="ir.ui.view">
+            <field name="name">kts.database.backup.select</field>
+            <field name="model">kts.database.utils</field>
+            <field name="context">{"search_default_backup_flag":1}</field>
+            <field name="arch" type="xml">
+                <search string="Search Type">
+                    <filter name="backup_flag" string="Backup" domain="[('backup_flag','=',True)]"/>
+               </search>
+            </field>
+        </record>
+        
+	<record id="view_kts_database_backup_filter1" model="ir.ui.view">
+            <field name="name">kts.database.backup.select1</field>
+            <field name="model">kts.database.utils</field>
+            <field name="context">{"search_default_backup_flag":1}</field>
+            <field name="arch" type="xml">
+                <search string="Search Type">
+                    <filter name="backup_flag" string="Restore" domain="[('backup_flag','=',False)]"/>
+               </search>
+            </field>
+        </record>
+        
+       
+       
+       <record id="action_kts_database_backup" model="ir.actions.act_window">
+            <field name="name">Database Backup</field>
+            <field name="res_model">kts.database.utils</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>          
+            <field eval="False" name="view_id"/>
+             <field name="context">{'backup_flag':True}</field>
+            <field name="domain">[('backup_flag','=',True)]</field>
+            <field eval="False" name="view_id"/>
+            <field name="search_view_id" ref="view_kts_database_backup_filter"/>
+      
+       </record>
+      
+      <record id="action_kts_database_backup_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_kts_database_utils_tree"/>
+            <field name="act_window_id" ref="action_kts_database_backup"/>
+      </record>
+        
+      <record id="action_kts_database_backup_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_kts_database_utils_form"/>
+            <field name="act_window_id" ref="action_kts_database_backup"/>
+      </record>
+       
+      
+      <record id="action_kts_database_restore" model="ir.actions.act_window">
+            <field name="name">Database Restore</field>
+            <field name="res_model">kts.database.utils</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>          
+            <field name="context">{'backup_flag':False}</field>
+            <field name="domain">[('backup_flag','=',False)]</field>
+            <field eval="False" name="view_id"/>
+            <field name="search_view_id" ref="view_kts_database_backup_filter1"/>
+       </record>
+      
+      <record id="action_kts_database_restore_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_kts_database_utils_tree1"/>
+            <field name="act_window_id" ref="action_kts_database_restore"/>
+      </record>
+        
+      <record id="action_kts_database_restore_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_kts_database_utils_form1"/>
+            <field name="act_window_id" ref="action_kts_database_restore"/>
+      </record>
+      
+       
+      
+      <menuitem
+            id="base.kts_database_root"
+            name="Database"
+            sequence="120"/>
+       
+       <menuitem
+            id="menu_kts_database_root"
+            name="Database Management"
+            parent="base.kts_database_root"    
+            sequence="1"/>
+       
+       <menuitem
+            id="menu_action_kts_database"
+            name="Database Backup"
+            action="action_kts_database_backup"
+            parent="menu_kts_database_root"    
+            sequence="16"/>     
+       
+       <menuitem
+            id="menu_action_kts_database1"
+            action="action_kts_database_restore"
+            name="Database Restore"
+            parent="menu_kts_database_root"    
+            sequence="18"/>     
+       
+       
+   
+   </data>
+</openerp>

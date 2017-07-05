@@ -1,0 +1,79 @@
+<openerp>
+   <data>   
+       <record id="view_account_vendor_invoice_form1" model="ir.ui.view">
+             <field name="name">account.invoice.vendor.form1</field>
+             <field name="model">account.invoice</field>
+             <field name="inherit_id" ref="account.invoice_supplier_form"/>
+                   <field name="arch" type="xml">
+                   
+                   <xpath expr="//page/group/group/field[@name='amount_total']" position="after">  
+                            <field name="tds_amount"/>
+                          </xpath>
+                         
+                         
+                   <field name = "invoice_line_ids" position="after">
+                    <group class="oe_footer oe_left" col="6">                          
+                           <field name="tds_account"/>
+                           <field name="tds_charges_type"/>
+                           <field name="tds_charges" attrs="{'readonly':[('tds_charges_type','=','variable')]}"/>
+                       </group>
+                         
+                   </field>
+                   </field>       
+             </record>
+             
+         
+         <record id="view_account_tds_form" model="ir.ui.view">
+                 <field name="name">account.tds.form</field>
+                 <field name="model">account.tds</field>
+                   <field name="arch" type="xml">
+                     <form string="TDS">
+                       <sheet>
+                       <group name="top">
+                          <group name="left">
+                             <field name="name"/>
+                             <field name="tds_account"/>
+                             <field name="perc"/>
+                          </group>
+                           <group name="right">
+                              <field name="precision"/>
+                              <field name="active"/>
+                           </group>
+                       </group>
+                       </sheet>
+                     </form>                   
+                   </field>       
+             </record>
+            
+            <record id="view_account_tds_tree" model="ir.ui.view">
+                 <field name="name">account.tds.tree</field>
+                 <field name="model">account.tds</field>
+                   <field name="arch" type="xml">
+                     <tree string="TDS">
+                       
+                             <field name="name"/>
+                             <field name="tds_account"/>
+                             <field name="perc"/>
+                              <field name="precision"/>
+                              <field name="active"/>
+                       </tree>                   
+                   </field>       
+             </record>
+            
+            
+            <record id="action_account_tds_form" model="ir.actions.act_window">
+            <field name="name">TDS</field>
+            <field name="res_model">account.tds</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>            
+            </record>
+            
+            <menuitem
+            id="menu_account_tds"
+            name="TDS"
+            action="action_account_tds_form"
+            parent="account.account_account_menu"
+            groups="account.group_account_manager"
+            sequence="7"/>                   
+       </data> 
+     </openerp>

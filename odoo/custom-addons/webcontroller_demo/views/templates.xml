@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	<template id="assets_frontend" inherit_id="website.assets_frontend" name="Contract Front-end assets">
+                <xpath expr="." position="inside">
+                    <script type="text/javascript" src="/webcontroller_demo/static/src/js/contract.js"/>
+                     <link href="/webcontroller_demo/static/src/css/contract_table.css" rel="stylesheet" /> 
+                </xpath>
+        </template>
+		<template name="Customer Contract" id="website.contract_tracker" page="True">
+			<t t-call="website.layout">
+				<div id="page">
+				   <div class="oe_structure"> 
+				        <div class="container">
+					           <h3>Customer Contract Tracker</h3>
+					            
+					          
+					                <!--    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/> -->
+					               <p>
+	 									<label for="text">Product Serial No</label><br/>
+										<input type="text" name="product_serial_no" required="True" id="cust-no"/><br/><br/>
+								   </p>
+								   <p>
+                                        <label for="text">Contract No</label><br/>
+                                        <input type="text" name="contract_no" id="contract_no"/><br/><br/>
+                                   </p>
+								    <p class="p-container" align="left">
+                                        <input type="button" name="customercontract" class="btn btn-primary mb32" value="Search" id="contract-submit"/>
+                                    </p>    
+					               <table class="table table-hover" id="cust_table">
+                                    <thead>
+                                        <tr>                     
+                                          <th>Name</th>
+                                          <th>Customer Name</th>
+                                          <th>Date Of Activation</th>
+                                          <th>Validity Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                    </table>
+					               <p id="error"></p>
+					    </div>
+					</div>
+			    </div>		
+			</t>
+		</template>
+		
+		<template name="Contract" id="website.contract_form" page="True">
+            <t t-call="website.layout">
+                <div id="page">
+                   <h3>Contract Details</h3>
+                    <table class="table table-hover">
+                        
+                        <tbody>
+                                <t t-foreach="contract" t-as="cont">
+			                                <tr>
+			                                        <td>Name</td>
+			                                        <td><t t-esc="cont.name" /></td>
+			                                 </tr>
+			                                 <tr> 
+			                                          <td>Dealer/Customer Name</td>
+		                                              <td><t t-esc="cont.partner_id.name" /></td>
+			                                 </tr>
+			                                 <tr> 
+                                                      <td>Date Of Activation</td>
+                                                      <td><t t-esc="cont.date_activation" /></td>
+                                             </tr>
+                                             <tr> 
+                                                      <td>Validity Date</td>
+                                                      <td><t t-esc="cont.val_duration" /></td>
+                                             </tr>
+                                             
+			                     </t>
+                        </tbody>
+                    </table>
+                </div>      
+            </t>
+        </template>
+        <template name="Error" id="website.error_form" page="True">
+            <t t-call="website.layout">
+                <div id="page">
+                 <h3>Please fill valid data and try again</h3>
+                 </div>
+             </t>
+         </template>
+         
+         <template name="Customer Service" id="website.service_tracker" page="True">
+            <t t-call="website.layout">
+                <div id="page">
+                   <div class="oe_structure"> 
+                        <div class="container">
+                               <h3>Customer Service Tracker</h3>
+                               <form action="/customerservice" method="post">
+                                      <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <p>
+                                        <label for="text">Service Id</label><br/>
+                                        <input type="text" name="product_serial_no" required="True"/><br/><br/>
+                                   </p>
+                                    <p class="p-container" align="left">
+                                        <input type="submit" name="customercontract" class="btn btn-primary mb32" value="Search"/>
+                                    </p>    
+                               </form>
+                        </div>
+                    </div>
+                </div>      
+            </t>
+        </template>
+        
+        <template name="Service" id="website.service_form" page="True">
+            <t t-call="website.layout">
+                <div id="page">
+                   <h3>Service Details</h3>
+                    <table class="table table-hover">
+                        
+                        <tbody>
+                                <t t-foreach="service" t-as="cont">
+                                   <t t-if="cont.state not in ('draft','plan')">
+                                     
+                                     <tr>
+                                            <td>Name</td>
+                                            <td><t t-esc="cont.name" /></td>
+                                     </tr>
+                                     <tr> 
+                                              <td>Dealer/Customer Name</td>
+                                              <td><t t-esc="cont.partner_id.name" /></td>
+                                     </tr>
+                                     
+                                     <tr> 
+                                              <td>Due Date</td>
+                                              <td><t t-esc="cont.due_date" /></td>
+                                     </tr>
+                                     
+                                     <tr> 
+                                              <td>Responsible</td>
+                                              <td><t t-esc="cont.assigned_to.name" /></td>
+                                     </tr>
+                                   </t>                                                                                   
+                                  <t t-if="cont.state in ('draft','plan')"> 
+                                    <p>Service is not logged Yet... </p>
+                                  </t>
+                               </t>
+                                 
+                        </tbody>
+                    </table>
+                </div>      
+            </t>
+        </template>
+        
+        
+         
+                 
+	</data>
+</openerp>

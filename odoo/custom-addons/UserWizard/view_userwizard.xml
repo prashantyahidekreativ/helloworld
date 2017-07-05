@@ -1,0 +1,59 @@
+<openerp>
+   <data>
+     
+     <record id="create_user_wizard_view" model="ir.ui.view">
+            <field name="name">Create User</field>
+            <field name="model">create.user.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create User">
+                   <group> 
+                    <field name="company_id" options="{'no_open':True,'no_create':True}"/>
+                    <field name="group_id" options="{'no_open':True,'no_create':True}" domain="[('create_wizard_flag','=',True)]" />
+                    <field name="user_first"/>
+                    <field name="user_last"/>
+                    <field name="email"/>
+                    <field name="login"/>
+                    <field name="pwd"/>
+                    </group>
+                    <footer>
+                        <group >
+                            <field name="open_flag"/>
+                        </group>
+                        <button string="Create User" name="create_user_button" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+     
+     <record id="action_create_user_wizard" model="ir.actions.act_window">
+            <field name="name">Create User Wizard</field>
+            <field name="src_model">res.users</field>
+           
+            <field name="res_model">create.user.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>            
+            <field name="key2">client_action_multi</field>
+            <field name="target">new</field>
+            
+            
+       </record>
+       
+       <menuitem
+            id="menu_kts_company_master"
+            name="Create User Wizard"
+            action="action_create_user_wizard"
+            parent="base.menu_users"    
+            sequence="9"/>  
+      <record id="view_res_groups_create_user_wizard_form1" model="ir.ui.view">
+             <field name="name">res.groups.user.create.wizard.form1</field>
+             <field name="model">res.groups</field>
+             <field name="inherit_id" ref="base.view_groups_form"/>
+                   <field name="arch" type="xml">
+                   <field name="share" position="after">
+                   <field name="create_wizard_flag"/>
+                   </field>
+                   </field>
+      </record>
+  </data>
+ </openerp>

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_kts_generate_leave_allocation,access_kts_generate_leave_allocation,model_kts_generate_leave_allocation,base.group_hr_manager,1,1,1,1
+access_kts_holidays_creation,access_kts_holidays_creation,model_kts_holidays_creation,base.group_hr_manager,1,1,1,1
+access_kts_leave_period,access_kts_leave_period,model_kts_leave_period,base.group_hr_manager,1,1,1,1
+access_kts_allocation_rules,access_kts_allocation_rules,model_kts_allocation_rules,base.group_hr_manager,1,1,1,1
+access_kts_week_off,access_kts_week_off,model_kts_week_off,base.group_hr_manager,1,1,1,1

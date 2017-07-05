@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Root Menus -->
+
+        <menuitem id="menu_kts_payroll_root" name="Payroll" sequence="45" web_icon="hr_payroll,static/description/icon.png"/>
+         
+        <menuitem id="menu_kts_payroll_employee_contract" name="Contract And Payroll" parent="menu_kts_payroll_root" sequence="1"/>
+		
+        <menuitem id="menu_kts_payroll_configuration" name="Configuration" parent="menu_kts_payroll_root"
+            sequence="10" />
+		
+		<record id="kts_employee_contract_amount_tree" model="ir.ui.view">
+            <field name="name">kts.employee.contract.amount.tree</field>
+            <field name="model">kts.employee.contract.amount</field>
+            <field name="arch" type="xml">
+                <tree string="Contribution Registers" editable="bottom">
+                    <field name="base_rule_id" />
+                    <field name="related_dependant_on_total" invisible="1"/>
+                    <field name="related_calculation_type" invisible="1"/>      
+                    <field name="base_amount" attrs="{'readonly':[('related_calculation_type','!=','base'),('related_dependant_on_total','!=','True')], 'invisible':[('related_calculation_type','!=','base'),('related_dependant_on_total','!=','True')]}" />
+                </tree>
+            </field>
+        </record>
+        
+        <record id="kts_employee_contract_amount_form" model="ir.ui.view">
+            <field name="name">kts.employee.contract.amount.form</field>
+            <field name="model">kts.employee.contract.amount</field>
+            <field name="arch" type="xml">
+                <form string="Rule And Amount Form" editable="bottom">
+                    <field name="base_rule_id" />
+                    <field name="base_amount"  />
+                </form>
+            </field>
+        </record>
+        
+        <record id="view_kts_employee_salary_form" model="ir.ui.view">
+            <field name="name">kts.employee.salary.form</field>
+            <field name="model">kts.employee.salary</field>            
+            <field name="arch" type="xml">
+                <form string="Employee Salary Lines">
+                	<sheet>
+                	   	<group col="4">
+		                    <field name="employee_id"/>
+		                    <field name="contract_id"/>
+		                    <field name="start_date"/>
+		                    <field name="end_date"/>
+	                   	    <field name="total_amount"/>
+	                   	</group>
+	                   	<notebook>
+	                   		<page string="Salary Rules">
+	                   			<field name="contract_amount_line"/>
+	                   		</page>
+	                   	</notebook> 
+	           		</sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="view_kts_employee_salary_tree" model="ir.ui.view">
+            <field name="name">kts.employee.salary.tree</field>
+            <field name="model">kts.employee.salary</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Salary Lines">
+                    <field name="employee_id"/>
+                    <field name="contract_id" invisible="1"/>
+                    <field name="start_date" invisible="1"/>
+                    <field name="end_date" invisible="1"/>
+                    <field name="state"/>
+                    <field name="total_amount" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+       
+       <record id="view_kts_employee_salary_form1" model="ir.ui.view">
+            <field name="name">kts.employee.salary.form1</field>
+            <field name="model">kts.employee.salary</field>            
+            <field name="arch" type="xml">
+                <form string="Employee Salary Slip">
+                	<header>
+                       <button name="action_post_salary" string="Post Salary" type="object" states="draft" class="btn-primary"/> 
+                       <field name="state" widget="statusbar" statusbar_visible="draft,post" />
+                	</header>
+                	<sheet>
+                	   	<group>
+                	   	        <group>
+		                        <field name="employee_id" attrs="{'readonly':[('state','in',['post'])]}"/>
+		                        <field name="contract_id" invisible="1"/>
+		                        <field name="start_date" invisible="1"/>
+		                        <field name="end_date" invisible="1"/>
+	                   	        <field name="total_amount" invisible="1"/>	                   	    
+	                   	        <field name="journal_id" string="Salary Journal" attrs="{'readonly':[('state','in',['post'])]}"/>
+	                   	        </group>
+	                   	         
+	                   	        <group>
+	                   	        <field name="journal_amt_id" string="Bank Journal" attrs="{'readonly':[('state','in',['post'])]}"/>
+	                   	        </group>
+	                   	</group>
+	                   	<notebook>
+	                   		<page string="Salary Rules">
+	                   			<field name="contract_amount_line" mode="tree" widget="one2many_list" attrs="{'readonly':[('state','in',['post'])]}">
+	                   			   <tree stirng="Salary" editable="bottom">
+	                   			   <field name="base_rule_id"/>
+	                   			   <field name="start_date"/>
+                                   <field name="end_date"/>
+                                   <field name="contract_id"/>
+	                   			   <field name="register_id" string="Register"/>
+	                   			   <field name="dependant_value" string="Perc %"/>
+	                   			   <field name="sys_gen_amount"/>
+	                   			   <field name="base_amount"/>
+	                   			   </tree>
+	                   			</field>
+	                   		    <group class="oe_subtotal_footer oe_right">
+                                    <field name="amount_total" class="oe_subtotal_footer_separator"/>
+	                   		    </group>
+	                   		</page>
+	                   	</notebook> 
+	           		</sheet>
+                </form>
+            </field>
+        </record>
+        
+        
+        
+       <record id="action_kts_employee_salary" model="ir.actions.act_window">
+       		<field name="name">Employee Salary</field>
+            <field name="res_model">kts.employee.salary</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>  
+			<field eval="False" name="view_id"/>
+		</record> 
+              
+       <record id="action_kts_employee_salary_tree1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_kts_employee_salary_tree"/>
+            <field name="act_window_id" ref="action_kts_employee_salary"/>
+        </record>
+        
+        <record id="action_kts_employee_salary_tree2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_kts_employee_salary_form1"/>
+            <field name="act_window_id" ref="action_kts_employee_salary"/>
+        </record>
+        
+        <menuitem id="menu_action_kts_employee_salary_form" name="Empolyee Salary" action="action_kts_employee_salary" parent="menu_kts_payroll_employee_contract" sequence="14"/>
+        
+        
+       
+        
+        
+        
+        
+        <record id="kts_employee_salary_line_tree" model="ir.ui.view">
+            <field name="name">kts.employee.salary.line.tree</field>
+            <field name="model">kts.employee.salary.line</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Salary Line" editable="bottom">
+                    <field name="base_rule_id" />
+                    <field name="related_dependant_on_total" invisible="1"/>
+                    <field name="related_calculation_type" invisible="1"/>      
+                    <field name="base_amount" attrs="{'readonly':[('related_calculation_type','!=','base'),('related_dependant_on_total','!=','True')], 'invisible':[('related_calculation_type','!=','base'),('related_dependant_on_total','!=','True')]}" />
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="contract_id"/>
+                    <field name="total_amount"/>
+                    <field name="register_id"/>
+                    <field name="dependant_value"/>
+                    <field name="sys_gen_amount"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="kts_employee_salary_line_form" model="ir.ui.view">
+            <field name="name">kts.employee.salary.line.form</field>
+            <field name="model">kts.employee.salary.line</field>
+            <field name="arch" type="xml">
+                <form string=" Salary Rule And Amount Form" editable="bottom">
+                    <field name="base_rule_id" />
+                    <field name="base_amount"  />
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="contract_id"/>
+                    <field name="total_amount"/>
+                   
+                </form>
+            </field>
+        </record>
+        
+ 		
+ 		
+ 		
+ 		<!-- Salary structure -->
+        <record id="view_kts_payroll_structure_list_view" model="ir.ui.view">
+            <field name="name">kts.payroll.structure.tree</field>
+            <field name="model">kts.payroll.structure</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Function">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="rule_ids"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_kts_payroll_structure_tree" model="ir.ui.view">
+            <field name="name">kts.payroll.structure.tree</field>
+            <field name="model">kts.payroll.structure</field>
+            <field name="field_parent">children_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Salary Structure">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_kts_payroll_structure_filter" model="ir.ui.view">
+            <field name="name">kts.payroll.structure.select</field>
+            <field name="model">kts.payroll.structure</field>
+            <field name="arch" type="xml">
+                <search string="Payroll Structures">
+                    <field name="name" string="Payroll Structures" />
+                </search>
+            </field>
+        </record>
+
+        <record id="view_kts_employee_grade_form" model="ir.ui.view">
+            <field name="name">kts.payroll.structure.form</field>
+            <field name="model">kts.payroll.structure</field>
+            <field name="arch" type="xml">
+                <form string="Employee Function">
+                  <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        
+                    </group>
+                    <notebook colspan="4">
+                         <page string="Salary Rules">
+							<field name="rule_ids">
+								<tree>
+                            	    <field name="name"/>
+                                	<field name="code"/>
+                                	<field name="sequence" invisible="1"/>
+                             	    <field name="contribution_type"/>
+                             	    <field name="dependant_value" string="Perc %"/>
+                             	    <field name="deduct_contribute"/>
+                             	    <field name="register_id"/>
+                             	    <field name="dependant_on_total"/>
+                             	 </tree>
+                          	</field>
+                         </page>
+                    </notebook>
+                   </sheet> 
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_kts_payroll_structure_list_form" model="ir.actions.act_window">
+            <field name="name">Salary Structures</field>
+            <field name="res_model">kts.payroll.structure</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_kts_payroll_structure_list_view"/>
+        </record>
+        
+        <menuitem
+            id="menu_kts_payroll_structure_view"
+            action="action_view_kts_payroll_structure_list_form"
+            parent="menu_kts_payroll_configuration"
+            sequence="2"
+        />
+       <!-- End Salary structure -->
+
+        <record id="kts_contribution_register_tree" model="ir.ui.view">
+            <field name="name">kts.contribution.register.tree</field>
+            <field name="model">kts.contribution.register</field>
+            <field name="arch" type="xml">
+                <tree string="Contribution Registers">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+        
+        <record id="kts_contribution_register_filter" model="ir.ui.view">
+            <field name="name">kts.contribution.register.search</field>
+            <field name="model">kts.contribution.register</field>
+            <field name="arch" type="xml">
+                <search string="Contribution Registers">
+                    <field name="name" string="Contribution Registers"/>
+                </search>
+            </field>
+        </record>
+        
+        <record id="kts_contribution_register_form" model="ir.ui.view">
+            <field name="name">kts.contribution.register.form</field>
+            <field name="model">kts.contribution.register</field>
+            <field name="arch" type="xml">
+                <form string="Contribution">
+                  <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <newline/>
+                    <group>
+                    <separator string="Description"/><newline/>
+                    <field name="note" nolabel="1"/></group>
+                  </sheet>  
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_kts_contribution_register_form" model="ir.actions.act_window">
+            <field name="name">Contribution Registers</field>
+            <field name="res_model">kts.contribution.register</field>
+            <field name="view_type">form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new contribution register.
+              </p><p>
+                A contribution register is a third party involved in the salary
+                payment of the employees. It can be the social security, the
+                estate or anyone that collect or inject money on payslips.
+              </p>
+            </field>
+            <field name="view_id" ref="kts_contribution_register_tree"/>
+        </record>
+        
+        <menuitem
+            id="menu_action_kts_contribution_register_form"
+            action="action_kts_contribution_register_form"
+            parent="menu_kts_payroll_configuration"
+            sequence="14"
+        />
+
+        <!-- Salary Rules -->
+
+        <record id="kts_salary_rule_list" model="ir.ui.view">
+            <field name="name">kts.salary.rule.list</field>
+            <field name="model">kts.salary.rule</field>
+            <field name="arch" type="xml">
+                <tree string="Salary Rules">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="dependant_on_total"/>
+                    <field name="contribution_type"/>
+                    <field name="dependant_id"/>
+                    <field name="deduct_contribute"/>
+                    <field name="register_id"/>
+                    <field name="sequence"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="kts_salary_rule_tree" model="ir.ui.view">
+            <field name="name">kts.salary.rule.tree</field>
+            <field name="model">kts.salary.rule</field>
+            <field eval="20" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Salary Rules">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="kts_salary_rule_form" model="ir.ui.view">
+            <field name="name">kts.salary.rule.form</field>
+            <field name="model">kts.salary.rule</field>
+            <field name="arch" type="xml">
+                <form string="Salary Rules">
+                  <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name"/></h1>
+
+                    <group col="4">
+                       <field name="code"/>
+                       <field name="sequence" />
+                       <field name="active"/>
+                       <field name="appears_on_payslip" />
+                       <field name="frequency" widget="selection"/>
+                       <field name="category_id" invisible="1" />
+                    </group>
+                    <notebook colspan="6">
+                        <page string="General">
+                            <group col="4">
+                                <separator colspan="4" string="Company Contribution"/>
+                                <field name="register_id" required="1" />
+                                <field name="deduct_contribute" required="1" />                                
+                                <field name="contribution_type" required="1" />
+                                <field name="dependant_on_total" attrs="{'invisible':[('contribution_type','!=','dependant')]}" />
+                                <field name="dependant_id" domain="[('contribution_type', '=', 'base')]" attrs="{'invisible':[('contribution_type','!=','dependant')], 'required':[('contribution_type','=','dependant'),('dependant_on_total','=', False)]}"  />  
+                                <field name="dependant_value" attrs="{'invisible':[('contribution_type','!=','dependant')], 'required':[('contribution_type','=','dependant')]}" />
+                            </group>
+                        </page>
+                        <page string="Accounting">
+                            <group col="4">
+                                <field name="account_debit" required="1" />
+                                <field name="account_credit" required="1"  />
+                            </group>
+                        </page>
+                    </notebook>
+                   </sheet> 
+                </form>
+            </field>
+        </record>
+
+        <record id="action_kts_salary_rule_form" model="ir.actions.act_window">
+            <field name="name">Salary Rules</field>
+            <field name="res_model">kts.salary.rule</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="kts_salary_rule_list"/>
+        </record>
+
+        <menuitem id="menu_action_kts_salary_rule_form" action="action_kts_salary_rule_form" parent="menu_kts_payroll_configuration" sequence="12"/>
+
+        <record id="kts_employee_contract_list" model="ir.ui.view">
+            <field name="name">kts.employee.contract.list</field>
+            <field name="model">kts.employee.contract</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Contract">
+                    <field name="employee_id"/>
+                    <field name="struct_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="kts_employee_contract_tree" model="ir.ui.view">
+            <field name="name">kts.employee.contract.tree</field>
+            <field name="model">kts.employee.contract</field>
+            <field eval="20" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Employee Contract">
+                    <field name="employee_id"/>
+                    <field name="struct_id" />
+                </tree>
+            </field>
+        </record>
+        
+        <record id="kts_employee_contract_form" model="ir.ui.view">
+            <field name="name">kts.employe.contract.form</field>
+            <field name="model">kts.employee.contract</field>
+            <field name="arch" type="xml">
+                <form string="Employee Contract">
+                  <sheet>
+                    <group col="4">
+                       <separator colspan="4" string="Employee Contract"/>
+                       	   <field name="name" readonly="1" />
+                    	   <field name="employee_id"/>
+                       	   <field name="struct_id" required="1" />
+                       	   <field name="start_date" required="1" />
+                       	   <field name="end_date"  />
+                           <field name="related_total" invisible="1"/>
+                       	   <field name="total_amount" attrs="{'invisible':[('related_total','!=',True)]}" />
+                    </group>    
+                    <notebook colspan="6">
+                        <page string="Salary Rules">
+                                <field name="contract_amount_line"/>
+                        </page>
+                    </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_kts_employee_contract_form" model="ir.actions.act_window">
+            <field name="name">Employee Contract</field>
+            <field name="res_model">kts.employee.contract</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="kts_employee_contract_list"/>
+        </record>
+
+        <menuitem id="menu_action_kts_employee_contract_form" action="action_kts_employee_contract_form" parent="menu_kts_payroll_employee_contract" sequence="13"/>
+
+                
+        <record id="kts_employee_salary_generation_tree" model="ir.ui.view">
+            <field name="name">kts.employee.salary.generation.tree</field>
+            <field name="model">kts.employee.salary.generation</field>
+            <field eval="20" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Employee Contract">
+                    <field name="name"/>
+                    <field name="salary_period" />
+                </tree>
+            </field>
+        </record>
+        
+        <record id="kts_employee_salary_generation_form" model="ir.ui.view">
+            <field name="name">kts.employee.salary.generation.form</field>
+            <field name="model">kts.employee.salary.generation</field>
+            <field name="arch" type="xml">
+                <form string="Employee Salary Generation">
+                    <header>
+                		<button name="kts_generate_slip" string="Generate Slip" type="object" states="draft" class="btn-primary"/>
+                	    <field name="state" widget="statusbar" statusbar_visible="draft,done" />
+                	</header>
+                	<sheet>
+                    <group col="4">
+                       <separator colspan="4" string="Employee Salary Generation"/>
+                    	   <field name="name"/>
+                    	   <field name="generated" invisible="1" />
+                    	   <field name="salary_period" attrs="{'readonly':[('generated','=',True)]}"  />
+                    </group>    
+                    <notebook colspan="6">
+                        <page string="Salary">
+                           <field name="slip_ids"  />
+                        </page>
+                    </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_kts_employee_salary_generation_form" model="ir.actions.act_window">
+            <field name="name">Employee Salary Generation</field>
+            <field name="res_model">kts.employee.salary.generation</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="kts_employee_salary_generation_tree"/>
+        </record>
+
+        <menuitem id="menu_action_kts_employee_salary_generation_form" action="action_kts_employee_salary_generation_form" parent="menu_kts_payroll_employee_contract" sequence="15"/>
+
+		<record id="kts_employee_salary_exception_tree" model="ir.ui.view">
+            <field name="name">kts.employee.salary.exception.tree</field>
+            <field name="model">kts.employee.salary.exception</field>
+            <field eval="20" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Salary Exception">
+                    <field name="employee_id"/>
+                    <field name="salary_period" />
+                    <field name="start_date" />
+		            <field name="end_date" />
+                    <field name="reason"/>
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+        
+        <record id="kts_employee_salary_exception_form" model="ir.ui.view">
+            <field name="name">kts.employee.salary.exception.form</field>
+            <field name="model">kts.employee.salary.exception</field>
+            <field name="arch" type="xml">
+                <form string="Employee Salary Exception">
+                    <header>
+                		<button name="kts_regenerate_slip" string="Regenerate Slip" type="object" states="open" class="btn-primary"/>
+                	    <field name="state" widget="statusbar" statusbar_visible="open,close"/>
+                	</header>
+                	<sheet>
+                    <group col="4">
+                       <separator colspan="4" string="Employee Salary Exception"/>
+                    	    <field name="employee_id" readonly="1" />
+		                    <field name="salary_period" readonly="1" />
+		                    <field name="start_date" readonly="1"  />
+		                    <field name="end_date" readonly="1" />
+		                    <field name="reason" readonly="1" />
+		                    <field name="contract_id" domain="[('employee_id', '=', employee_id)]" />
+		            </group>    
+                   <notebook>
+                   		<page string="Salary Rules">
+                   			<field name="contract_amount_line" mode="tree" widget="onetomany_list">
+                   		    <tree editable="bottom">
+                   		     <field name="base_rule_id"/>
+                   		     <field name="base_amount"/>
+                   		    </tree>
+                   		    </field>
+                   		</page>
+                   </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_kts_employee_salary_exception_form" model="ir.actions.act_window">
+            <field name="name">Employee Salary Exception</field>
+            <field name="res_model">kts.employee.salary.exception</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="kts_employee_salary_exception_tree"/>
+        </record>
+
+        <menuitem id="menu_action_kts_employee_salary_exception_form" action="action_kts_employee_salary_exception_form" parent="menu_kts_payroll_employee_contract" sequence="15"/>
+       
+       <!-- Start Salary Period --> 
+       <record id="view_kts_salary_period_form" model="ir.ui.view">
+            <field name="name">kts.salary.period.form</field>
+            <field name="model">kts.salary.period</field>
+            <field name="arch" type="xml">
+                <form string="Salary Period">
+                  <sheet>
+                    <group col="4">
+                        <field name="name" required="1"  />
+                        <field name="start_date" required="1"  />
+                        <field name="end_date" required="1"  />
+                        <field name="period" invisible="1"  />
+                        <field name="monthly_flag"/>
+                        <field name="quarterly_flag"/>
+                        <field name="semiyearly_flag"/>
+                        <field name="yearly_flag"/>
+                    </group>
+                 </sheet> 
+                </form>
+            </field>
+        </record>
+		
+		<record id="view_kts_salary_period_tree" model="ir.ui.view">
+            <field name="name">kts.salary.period.tree</field>
+            <field name="model">kts.salary.period</field>
+            <field name="arch" type="xml">
+                <tree string="Salary Period">
+                        <field name="name"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="period"  />
+                        <field name="monthly_flag"/>
+                        <field name="quarterly_flag"/>
+                        <field name="semiyearly_flag"/>
+                        <field name="yearly_flag"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_view_kts_salary_period" model="ir.actions.act_window">
+            <field name="name">Salary Period</field>
+            <field name="res_model">kts.salary.period</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_kts_salary_period_tree"/>
+        </record>
+        
+        <menuitem
+            id="menu_kts_salary_period_view"
+            action="action_view_kts_salary_period"
+            parent="menu_kts_payroll_configuration"
+            sequence="16"
+        />
+       <!-- End Salary Period -->
+    </data>
+</openerp>
